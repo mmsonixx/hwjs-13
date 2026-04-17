@@ -7,9 +7,9 @@ const user = {
 user.mood = "happy";
 user.hobby = "skydiving";
 user.premium = false;
-const keyUser = Object.keys(user);
-for (const key of keyUser) {
-  console.log(`${key}: ${user[key]}`);
+const keyEntries = Object.entries(user);
+for (const [key , value] of keyEntries) {
+  console.log(`${key}: ${value}`);
 }
 
 //2
@@ -20,6 +20,7 @@ function countProps(obj) {
 }
 console.log(countProps(user));
 
+
 //3
 console.log("Завдання 3");
 const employees = {
@@ -29,7 +30,7 @@ const employees = {
   Danil: 2,
   Andrey: 4,
 };
-function findBestEmployee(employees) {
+function findBestEmployee({ ...employees }) {
   let result = 0;
   for (const employee in employees) {
     if (employees[employee] > result) {
@@ -51,10 +52,13 @@ const salaryEmployees = {
 };
 function countTotalSalary(employees) {
   let sum = 0;
-  for (const employee in employees) {
-    sum += employees[employee];
+
+  const employeesEntries = Object.entries(employees);
+  for (const [, employeeValue] of employeesEntries) {
+    sum += employeeValue;
   }
   return sum;
+ 
 }
 console.log(countTotalSalary(salaryEmployees));
 
@@ -80,11 +84,12 @@ const bricks = [
 
 function getAllPropValues(arr, prop) {
    const result = [];
-  for (const bricks of arr) {
-      if (bricks[prop ] !== undefined) {
-         result.push(bricks[prop]) 
-     }
-  }
+ for (const { [prop]: value } of arr) {
+   if (value !== undefined) {
+     result.push(value);
+   }
+ }
+
   return result;
 }
 console.log(getAllPropValues(bricks, "color"));
@@ -114,17 +119,16 @@ const products = [
   },
 ];
 
-function calculateTotalPrice(allProdcuts, productName) {
+function calculateTotalPrice(allProducts, productName) {
   let sum = 0;
-  for (const product of allProdcuts) {
-      if (product.name === productName) {
-         sum = product.price * product.quantity
-     }
+  for (const { name, price, quantity } of allProducts) {
+if (name === productName) {
+  sum = price * quantity;
+}
   }
   return sum;
 }
  console.log(calculateTotalPrice(products, "coffe".toLowerCase()));
-
 
 const Transaction = {
   DEPOSIT: 'deposit',
@@ -134,7 +138,11 @@ const account = {
     balance: 0,
     transactions: [],
   createTransaction(amount, type) {
-      this.transactions.push({id: this.transactions.length + 1,amount: amount, typeTransaction: type }); 
+      this.transactions.push({
+        id: crypto.randomUUID(),
+        amount: amount,
+        typeTransaction: type,
+      }); 
 
     },
   deposit(amount) {
@@ -172,6 +180,5 @@ console.log(account.withdraw(100));
 console.log(account.deposit(700));
 console.log(account.getBalance());
 console.log(account.transactions);
-console.log(account.getTransactionDetails(Number(prompt('Введіть айди транзакціїї'))));
 console.log(account.getTransactionTotal(Transaction.DEPOSIT));
 
